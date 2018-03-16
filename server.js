@@ -10,13 +10,12 @@ var request = require('request');
 var axios = require('axios');
 var cheerio = require('cheerio');
 
-// require all models
-var db = require('./models');
-
-var PORT = 3000;
-
 // Initialize Express
 var app = express();
+var PORT = process.env.PORT || 3000;
+
+// require all models
+var db = require('./models');
 
 // Configure middleware
 
@@ -31,11 +30,20 @@ var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-// By default mongoose uses callbacks for async queries, we're setting it to use promises (.then syntax) instead
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/news-chat";
+
+// Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/NewsChat' {
-    useMongoClient = true
-});
+mongoose.connect(MONGODB_URI);
 
-// Routes
+//Routes
+require("./routes/api.js")(app);
+require("./routes/index.js");
+require("./routes/view.js")(app);
+
+// Start the server
+app.listen(PORT, function() {
+    console.log('App listening on port ' + PORT + '!');
+});
