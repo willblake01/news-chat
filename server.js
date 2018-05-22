@@ -1,55 +1,43 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var logger = require('morgan');
-var mongoose = require('mongoose');
-var request = require('request');
-var https = require("https");
+// Dependencies
+var express = require("express");
+var mongoose = require("mongoose");
+var exphbs = require("express-handlebars");
+var bodyParser = require("body-parser");
 
-// Our scraping tools
-// Axios is a promised-based http library, similar to jQuery's Ajax method
-// It works on the client and on the server
-var axios = require('axios');
-var cheerio = require('cheerio');
-
-// Initialize Express
-var app = express();
+// Set up our port to be either the host's designated port, or 3000
 var PORT = process.env.PORT || 3000;
 
-// require all models
-var db = require('./models');
+// Instantiate our Express App
+var app = express();
 
-// Configure middleware
+// Require our routes
+var routes = require("./routes");
 
-// Use morgan logger for logging requests
-app.use(logger('dev'));
-// Use body-parser for handling form submissions
-app.use(bodyParser.urlencoded({ extended: false }));
-// Use express.static to serve the public folder as a static directory
-app.use(express.static('public'));
-// Set Handlebars
-var exphbs = require("express-handlebars");
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+// Designate our public folder as a static directory
+app.use(express.static("public"));
+
+// Connect Handlebars to our Express app
+app.engine("handlebars", exphbs({
+    defaultLayout: "main"
+}));
 app.set("view engine", "handlebars");
 
-// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/news-chat";
+// Use bodyParser in our app
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
-// Set mongoose to leverage built in JavaScript ES6 Promises
+// Have every request go through our route middleware
+app.use(routes);
+
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
 // Connect to the Mongo DB
-mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
-//Routes
-require("./routes/api.js")(app);
-require("./routes/index.js");
-require("./routes/view.js")(app);
-
-// ping heroku
-setInterval(function() {
-    https.get("https://News-Chat.herokuapp.com/");
-}, 300000);
-
-// Start the server
-app.listen(PORT, function() {
-    console.log('App listening on port ' + PORT + '!');
+// Listen on the port
+app.listen(PORT, function () {
+    console.log("Listening on port: " + PORT);
 });
