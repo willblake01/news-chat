@@ -1,9 +1,32 @@
-var express = require("express");
+// Controller for our notes
+// ========================
+var db = require("../models");
 
-var router = express.Router();
-
-// Import the model (Headline.js) to use its database functions.
-var note = require("../models/Note.js");
-
-// Export routes for server.js to use.
-module.exports = router;
+module.exports = {
+  // Find one note
+  findOne: function (req, res) {
+    db.Note
+      .findOne(req.query)
+      .then(function (dbNote) {
+        res.json(dbNote);
+      });
+  },
+  // Create a new note
+  create: function (req, res) {
+    db.Note
+      .create(req.body)
+      .then(function (dbNote) {
+        res.json(dbNote);
+      });
+  },
+  // Delete a note with a given id
+  delete: function (req, res) {
+    db.Note
+      .remove({
+        _id: req.params.id
+      })
+      .then(function (dbNote) {
+        res.json(dbNote);
+      });
+  }
+};

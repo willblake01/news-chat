@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var request = require('request');
+var https = require("https");
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -42,6 +43,11 @@ mongoose.connect(MONGODB_URI);
 require("./routes/api.js")(app);
 require("./routes/index.js");
 require("./routes/view.js")(app);
+
+// ping heroku
+setInterval(function() {
+    https.get("https://News-Chat.herokuapp.com/");
+}, 300000);
 
 // Start the server
 app.listen(PORT, function() {
