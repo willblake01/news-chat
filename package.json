@@ -19,15 +19,18 @@
   },
   "homepage": "https://github.com/WillBlake01/News-Chat#readme",
   "dependencies": {
+    "atob": "^2.1.2",
     "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "cheerio": "^1.0.0-rc.2",
+    "cryptiles": "^4.1.2",
+    "deep-extend": "^0.6.0",
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
     "https": "^1.0.0",
     "mongoose": "^5.0.10",
     "morgan": "^1.9.0",
-    "nodemon": "^1.17.2",
+    "nodemon": "^1.18.3",
     "request": "^2.85.0"
   }
 }
