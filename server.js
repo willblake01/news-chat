@@ -1,17 +1,17 @@
 // Dependencies
-var express = require("express");
-var mongoose = require("mongoose");
-var exphbs = require("express-handlebars");
-var bodyParser = require("body-parser");
+const express = require("express");
+const mongoose = require("mongoose");
+const exphbs = require("express-handlebars");
+const bodyParser = require("body-parser");
 
 // Set up port to be either the host's designated port, or 3000
-var PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 // Instantiate Express App
-var app = express();
+const app = express();
 
 // Require routes
-var routes = require("./routes");
+const routes = require("./routes");
 
 // Designate public folder as a static directory
 app.use(express.static("public"));
@@ -32,12 +32,12 @@ app.use(bodyParser.json());
 app.use(routes);
 
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
 // Connect to the Mongo DB
 mongoose.connect(MONGODB_URI);
 
 // Listen on the port
 app.listen(PORT, function () {
-    console.log("Listening on port: " + PORT);
+    console.log(`🌎 ==> Server now on port ${PORT}!`);
 });
