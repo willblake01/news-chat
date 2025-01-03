@@ -16,17 +16,28 @@ const routes = require("./routes");
 // Designate public folder as a static directory
 app.use(express.static("public"));
 
+app.set("view engine", "handlebars");
+
 // Connect Handlebars to Express app
 app.engine("handlebars", exphbs({
-    defaultLayout: "main"
+    layoutsDir: __dirname + '/views/layouts',
 }));
-app.set("view engine", "handlebars");
+
+app.get('/', (req, res) => {
+//Serves the body of the page aka "main.handlebars" to the container //aka "index.handlebars"
+    res.render('home', {layout : 'main'});
+});
 
 // Use bodyParser in app
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
 
 // Have every request go through route middleware
 app.use(routes);

@@ -10,4 +10,4 @@ router.get("/saved", function (req, res) {
   res.render("saved");
 });
 
-module.exports = router;
+export default router;
